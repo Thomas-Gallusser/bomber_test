@@ -114,7 +114,7 @@ class c_ennemie {
         ennemie = [];
         nbrMursActuel = 0;
         nbrEnnemiesActuel = 0;
-        spawn();
+        spawn(1);
         tableScore.remove();
         restartBtn.remove();
         reMultiBtn.remove();
