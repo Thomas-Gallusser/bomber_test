@@ -32,7 +32,9 @@ class c_bomb {
         newBomb.style.backgroundPosition = "0px -80px";
         setTimeout(function() {
           that.poseur.canBomb = true;
-          boom.cloneNode(true).play();
+          let bm = boom.cloneNode(true);
+          bm.volume = 0.4;
+          bm.play();
           that.breakAll();
 
           newBomb.style.width = "120px";
@@ -52,16 +54,17 @@ class c_bomb {
 
   breakAll() {
     let allWall = [];
-    allWall.push(this.verifCollisionAll(joueur.div, this.x+move_size, this.y, murs));
-    allWall.push(this.verifCollisionAll(joueur.div, this.x-move_size, this.y, murs));
-    allWall.push(this.verifCollisionAll(joueur.div, this.x, this.y+move_size, murs));
-    allWall.push(this.verifCollisionAll(joueur.div, this.x, this.y-move_size, murs));
+    allWall.push(this.verifCollisionAll(joueur1.div, this.x+move_size, this.y, murs));
+    allWall.push(this.verifCollisionAll(joueur1.div, this.x-move_size, this.y, murs));
+    allWall.push(this.verifCollisionAll(joueur1.div, this.x, this.y+move_size, murs));
+    allWall.push(this.verifCollisionAll(joueur1.div, this.x, this.y-move_size, murs));
     allWall = allWall.filter(e => e.length > 0 && e[0].breakable > 0);
     allWall.forEach(function(element) {
       element[0].div.remove();
     });
 
-    if (this.verifPlayer()) joueur.getDamage();
+    if (this.verifPlayer()) joueur1.getDamage();
+    if (joueur2 != undefined) if (this.verifPlayer2()) joueur2.getDamage();
     this.verifEnemy().forEach(function(element) { element.getDamage(); });
   }
 
@@ -72,14 +75,25 @@ class c_bomb {
   }
 
   verifPlayer() {
-    if ((joueur.div.offsetLeft + move_size == this.div.offsetLeft && joueur.div.offsetTop == this.div.offsetTop) ||
-        (joueur.div.offsetLeft - move_size == this.div.offsetLeft && joueur.div.offsetTop == this.div.offsetTop) ||
-        (joueur.div.offsetLeft == this.div.offsetLeft && joueur.div.offsetTo + move_size == this.div.offsetTop) ||
-        (joueur.div.offsetLeft == this.div.offsetLeft && joueur.div.offsetTop - move_size == this.div.offsetTop) ||
-        (joueur.div.offsetLeft == this.div.offsetLeft && joueur.div.offsetTop == this.div.offsetTop))
+    if ((joueur1.div.offsetLeft + move_size == this.div.offsetLeft && joueur1.div.offsetTop == this.div.offsetTop) ||
+        (joueur1.div.offsetLeft - move_size == this.div.offsetLeft && joueur1.div.offsetTop == this.div.offsetTop) ||
+        (joueur1.div.offsetLeft == this.div.offsetLeft && joueur1.div.offsetTo + move_size == this.div.offsetTop) ||
+        (joueur1.div.offsetLeft == this.div.offsetLeft && joueur1.div.offsetTop - move_size == this.div.offsetTop) ||
+        (joueur1.div.offsetLeft == this.div.offsetLeft && joueur1.div.offsetTop == this.div.offsetTop))
           return true;
     else
           return false;
+  }
+
+  verifPlayer2() {
+      if ((joueur2.div.offsetLeft + move_size == this.div.offsetLeft && joueur2.div.offsetTop == this.div.offsetTop) ||
+          (joueur2.div.offsetLeft - move_size == this.div.offsetLeft && joueur2.div.offsetTop == this.div.offsetTop) ||
+          (joueur2.div.offsetLeft == this.div.offsetLeft && joueur2.div.offsetTo + move_size == this.div.offsetTop) ||
+          (joueur2.div.offsetLeft == this.div.offsetLeft && joueur2.div.offsetTop - move_size == this.div.offsetTop) ||
+          (joueur2.div.offsetLeft == this.div.offsetLeft && joueur2.div.offsetTop == this.div.offsetTop))
+            return true;
+      else
+            return false;
   }
 
   verifEnemy() {

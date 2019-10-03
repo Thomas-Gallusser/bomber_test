@@ -46,6 +46,7 @@ class c_ennemie {
   }
 
   gameOver() {
+    hurt.cloneNode(true).play();
     clearInterval(this.loop);
     this.div.remove();
     ennemie = ennemie.filter(e => e.life > 0);
@@ -68,6 +69,7 @@ class c_ennemie {
       loser.style.left = (terrain.offsetWidth / 2) - (loser.offsetWidth / 2) + 'px';
       loser.style.top = (terrain.offsetHeight / 2) - (loser.offsetHeight) + 'px';
 
+      let reMultiBtn = document.createElement("button");
       let restartBtn = document.createElement("button");
       restartBtn.style.position = "absolute";
       restartBtn.innerText = "Relancer la partie !"
@@ -86,7 +88,8 @@ class c_ennemie {
         bombe.forEach(function(element) {
           element.div.remove();
         });
-        joueur.div.remove();
+        joueur1.div.remove();
+        if (joueur2 != undefined) joueur2.div.remove();
         murs = [];
         bombe = [];
         ennemie = [];
@@ -94,6 +97,39 @@ class c_ennemie {
         nbrEnnemiesActuel = 0;
         spawn();
         restartBtn.remove();
+        reMultiBtn.remove();
+      };
+
+      reMultiBtn.style.position = "absolute";
+      reMultiBtn.innerText = "Multijoueur"
+      reMultiBtn.style.zIndex = 999;
+      terrain.appendChild(reMultiBtn);
+      reMultiBtn.style.left = (terrain.offsetWidth / 2) - (reMultiBtn.offsetWidth / 2) + 'px';
+      reMultiBtn.style.top = (terrain.offsetHeight / 2) - (reMultiBtn.offsetHeight) + 90 + 'px';
+      reMultiBtn.onclick = function() {
+        loser.remove();
+        murs.forEach(function(element) {
+          element.div.remove();
+        });
+        ennemie.forEach(function(element) {
+          element.div.remove();
+        });
+        bombe.forEach(function(element) {
+          element.div.remove();
+        });
+        murs = [];
+        bombe = [];
+        ennemie = [];
+        nbrMursActuel = 0;
+        nbrEnnemiesActuel = 0;
+        joueur1.div.remove();
+        if (joueur2 != undefined) {
+          joueur2.div.remove();
+          joueur2 = undefined;
+        }
+        spawn(2);
+        restartBtn.remove();
+        reMultiBtn.remove();
       };
     }
   }
@@ -109,7 +145,10 @@ class c_ennemie {
       if (code == "ArrowRight") newX += move_size;
       if (code == "ArrowLeft") newX -= move_size;
 
-      if (!this.verifCollision(this.div,newX,newY,murs) && !this.verifCollision(this.div,newX,newY,bombe) && !this.verifCollision(this.div,newX,newY,ennemie) && !this.verifCollisionP(this.div,newX,newY,joueur.div)) {
+      let j2 = false;
+      if (joueur2 != undefined) j2 = verifCollisionP(this.div,rndX,rndY,joueur2.div)
+
+      if (!this.verifCollision(this.div,newX,newY,murs) && !this.verifCollision(this.div,newX,newY,bombe) && !this.verifCollision(this.div,newX,newY,ennemie) && !this.verifCollisionP(this.div,newX,newY,joueur1.div)) {
         this.startAnim(code);
         this.div.style.left = newX + 'px';
         this.div.style.top = newY + 'px';
