@@ -3,12 +3,14 @@ let move_size = 40; // Cases par déplacements
 let nbrMurs = 90; // Le nombre de murs à spawn
 let nbrMursActuel = 0;
 
-let nbrEnnemies = 10; // Le nombre d'ennemies à spawn
+let nbrEnnemies = 1; // Le nombre d'ennemies à spawn
 let nbrEnnemiesActuel = 0;
 
 let murs = [];
 let bombe = [];
 let ennemie = [];
+let score = 1;
+let pseudo = '';
 
 let start = false;
 let joueur1;
@@ -22,6 +24,7 @@ let hurt = new Audio('sound/hurt.ogg');
 audio.loop = true;
 
 function spawn(multi) {
+  score = 0;
   audio.play();
   audio.volume = 0.1;
   gameover.volume = 0.1;

@@ -1,5 +1,3 @@
-//audio.cloneNode(true).play()
-
 class c_bomb {
   constructor(poseur) {
     this.poseur = poseur;
@@ -99,7 +97,7 @@ class c_bomb {
   verifEnemy() {
     return ennemie.filter(e => (e.div.offsetLeft + move_size == this.div.offsetLeft && e.div.offsetTop == this.div.offsetTop) ||
         (e.div.offsetLeft - move_size == this.div.offsetLeft && this.div.offsetTop == this.div.offsetTop) ||
-        (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTo + move_size == this.div.offsetTop) ||
+        (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop + move_size == this.div.offsetTop) ||
         (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop - move_size == this.div.offsetTop) ||
         (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop == this.div.offsetTop));
   }

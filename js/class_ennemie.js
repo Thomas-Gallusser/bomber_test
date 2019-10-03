@@ -1,6 +1,7 @@
 class c_ennemie {
   constructor(spawnX, spawnY) {
     this.life = 1;
+    this.dir = [];
 
     let divMob = document.createElement("div");
     divMob.style.width = "40px";
@@ -22,21 +23,13 @@ class c_ennemie {
   boucle() {
       let that = this;
       setTimeout(function() {
-        switch (getRnd(4)) {
-          case 0:
-            that.move("ArrowUp");
-            break;
-          case 1:
-            that.move("ArrowDown");
-            break;
-          case 2:
-            that.move("ArrowRight");
-            break;
-          case 3:
-            that.move("ArrowLeft");
-            break;
+        that.dir = [];
+        that.verifSee();
+
+        if (that.dir.length > 0) {
+          that.move(that.dir[getRnd(that.dir.length)]);
         }
-        that.boucle();
+        if (that.life > 0) that.boucle();
       },500);
   }
 
@@ -46,8 +39,8 @@ class c_ennemie {
   }
 
   gameOver() {
+    score++;
     hurt.cloneNode(true).play();
-    clearInterval(this.loop);
     this.div.remove();
     ennemie = ennemie.filter(e => e.life > 0);
 
@@ -56,29 +49,55 @@ class c_ennemie {
       start = false;
       win.play();
 
-      let loser = document.createElement("p");
-      loser.style.position = "absolute";
-      loser.innerText = "Bravo !"
-      loser.style.padding = "10px 15px 10px 15px";
-      loser.style.borderRadius= "5px";
-      loser.style.backgroundColor = 'white';
-      loser.style.zIndex = 999;
-      loser.style.fontWeight = "bold";
-      loser.style.fontSize = "21px";
-      terrain.appendChild(loser);
-      loser.style.left = (terrain.offsetWidth / 2) - (loser.offsetWidth / 2) + 'px';
-      loser.style.top = (terrain.offsetHeight / 2) - (loser.offsetHeight) + 'px';
+      let tableScore = document.createElement("table");
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", './score.php', true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onload = function() {
+          if (xhr.status === 200) {
+
+            if (xhr.responseText.includes('<tr>')) {
+              tableScore.style.position = "absolute";
+              tableScore.innerHTML = xhr.responseText;
+              tableScore.borderCollapse = "collapse";
+              tableScore.border = "1px solid black";
+              tableScore.style.width = "200px";
+              tableScore.style.height = ((xhr.responseText.split('<td>')-1) * 40) + "px";
+              tableScore.style.backgroundColor = 'white';
+              tableScore.style.zIndex = 999;
+              tableScore.style.fontWeight = "bold";
+              tableScore.style.fontSize = "16px";
+              terrain.appendChild(tableScore);
+              tableScore.style.left = (terrain.offsetWidth / 2) - (tableScore.offsetWidth / 2) + 'px';
+              tableScore.style.top = '10px';
+            }
+          }
+      };
+      xhr.send('get');
+
+      let winer = document.createElement("p");
+      winer.style.position = "absolute";
+      winer.innerText = "Bravo !"
+      winer.style.padding = "10px 15px 10px 15px";
+      winer.style.borderRadius= "5px";
+      winer.style.backgroundColor = 'white';
+      winer.style.zIndex = 999;
+      winer.style.fontWeight = "bold";
+      winer.style.fontSize = "21px";
+      terrain.appendChild(winer);
+      winer.style.left = (terrain.offsetWidth / 2) - (winer.offsetWidth / 2) + 'px';
+      winer.style.top = (terrain.offsetHeight / 2) - (winer.offsetHeight) + 'px';
 
       let reMultiBtn = document.createElement("button");
       let restartBtn = document.createElement("button");
       restartBtn.style.position = "absolute";
-      restartBtn.innerText = "Relancer la partie !"
+      restartBtn.innerText = "Solo"
       restartBtn.style.zIndex = 999;
       terrain.appendChild(restartBtn);
       restartBtn.style.left = (terrain.offsetWidth / 2) - (restartBtn.offsetWidth / 2) + 'px';
       restartBtn.style.top = (terrain.offsetHeight / 2) - (restartBtn.offsetHeight) + 60 + 'px';
       restartBtn.onclick = function() {
-        loser.remove();
+        winer.remove();
         murs.forEach(function(element) {
           element.div.remove();
         });
@@ -96,12 +115,13 @@ class c_ennemie {
         nbrMursActuel = 0;
         nbrEnnemiesActuel = 0;
         spawn();
+        tableScore.remove();
         restartBtn.remove();
         reMultiBtn.remove();
       };
 
       reMultiBtn.style.position = "absolute";
-      reMultiBtn.innerText = "Multijoueur"
+      reMultiBtn.innerText = "Multijoueur";
       reMultiBtn.style.zIndex = 999;
       terrain.appendChild(reMultiBtn);
       reMultiBtn.style.left = (terrain.offsetWidth / 2) - (reMultiBtn.offsetWidth / 2) + 'px';
@@ -145,30 +165,20 @@ class c_ennemie {
       if (code == "ArrowRight") newX += move_size;
       if (code == "ArrowLeft") newX -= move_size;
 
-      let j2 = false;
-      if (joueur2 != undefined) j2 = verifCollisionP(this.div,rndX,rndY,joueur2.div)
-
-      if (!this.verifCollision(this.div,newX,newY,murs) && !this.verifCollision(this.div,newX,newY,bombe) && !this.verifCollision(this.div,newX,newY,ennemie) && !this.verifCollisionP(this.div,newX,newY,joueur1.div)) {
-        this.startAnim(code);
-        this.div.style.left = newX + 'px';
-        this.div.style.top = newY + 'px';
-      } else {
-        switch (getRnd(4)) {
-          case 1:
-            this.move("ArrowUp");
-            break;
-          case 2:
-            this.move("ArrowDown");
-            break;
-          case 3:
-            this.move("ArrowRight");
-            break;
-          case 4:
-            this.move("ArrowLeft");
-            break;
-        }
-      }
+      this.startAnim(code);
+      this.div.style.left = newX + 'px';
+      this.div.style.top = newY + 'px';
     }
+  }
+
+  verifSee(){
+    if (!this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,murs) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,joueur1)) this.dir.push("ArrowLeft");
+
+    if (!this.verifCollision(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,murs) && !this.verifCollision(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,joueur1)) this.dir.push("ArrowRight");
+
+    if (!this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,murs) && !this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,joueur1)) this.dir.push("ArrowUp");
+
+    if (!this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,murs) && !this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,joueur1)) this.dir.push("ArrowDown");
   }
 
   startAnim(code) {

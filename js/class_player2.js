@@ -52,7 +52,7 @@ class c_player2 {
       }
     }, false);
     document.addEventListener("keypress", event => {
-      if (event.code == that.bombe && this.canBomb) new c_bomb(this);
+      if (event.code == that.bombe && this.canBomb && that.life > 0) new c_bomb(this);
     }, false);
   }
 
@@ -62,12 +62,39 @@ class c_player2 {
   }
 
   gameOver() {
+    let that = this;
     audio.pause();
     hurt.cloneNode(true).play();
 
     start = false;
     this.div.style.display = 'none';
     win.play();
+
+    let tableScore = document.createElement("table");
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", './score.php', true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+
+          if (xhr.responseText.includes('<tr>')) {
+            tableScore.style.position = "absolute";
+            tableScore.innerHTML = xhr.responseText;
+            tableScore.borderCollapse = "collapse";
+            tableScore.border = "1px solid black";
+            tableScore.style.width = "200px";
+            tableScore.style.height = ((xhr.responseText.split('<td>')-1) * 40) + "px";
+            tableScore.style.backgroundColor = 'white';
+            tableScore.style.zIndex = 999;
+            tableScore.style.fontWeight = "bold";
+            tableScore.style.fontSize = "16px";
+            terrain.appendChild(tableScore);
+            tableScore.style.left = (terrain.offsetWidth / 2) - (tableScore.offsetWidth / 2) + 'px';
+            tableScore.style.top = '10px';
+          }
+        }
+    };
+    xhr.send('get');
 
     let loser = document.createElement("p");
     loser.style.position = "absolute";
@@ -109,7 +136,12 @@ class c_player2 {
       joueur1.div.remove();
       joueur2.div.remove();
       joueur2 = undefined;
+      pseudo = iPseudo.value;
+      clearInterval(that.loop);
       spawn(1);
+      tPseudo.remove();
+      iPseudo.remove();
+      tableScore.remove();
       restartBtn.remove();
       reMultiBtn.remove();
     };
@@ -141,10 +173,37 @@ class c_player2 {
         joueur2.div.remove();
         joueur2 = undefined;
       }
+      pseudo = iPseudo.value;
       spawn(2);
+      tPseudo.remove();
+      iPseudo.remove();
       restartBtn.remove();
       reMultiBtn.remove();
+      clearInterval(that.loop);
+      that.destroy();
     };
+
+    let tPseudo = document.createElement("p");
+    tPseudo.style.position = "absolute";
+    tPseudo.innerText = "Pseudo:";
+    tPseudo.style.padding = "5px 10px 5px 10px";
+    tPseudo.style.borderRadius= "5px";
+    tPseudo.style.backgroundColor = 'white';
+    tPseudo.style.zIndex = 999;
+    tPseudo.style.fontWeight = "bold";
+    tPseudo.style.fontSize = "16px";
+    terrain.appendChild(tPseudo);
+    tPseudo.style.left = (terrain.offsetWidth / 2) - (tPseudo.offsetWidth / 2) + 'px';
+    tPseudo.style.top = (terrain.offsetHeight / 2) - (tPseudo.offsetHeight) - 90 + 'px';
+
+    let iPseudo = document.createElement("input");
+    iPseudo.setAttribute('type','text')
+    iPseudo.style.position = "absolute";
+    iPseudo.style.zIndex = 999;
+    iPseudo.value = pseudo;
+    terrain.appendChild(iPseudo);
+    iPseudo.style.left = (terrain.offsetWidth / 2) - (iPseudo.offsetWidth / 2) + 'px';
+    iPseudo.style.top = (terrain.offsetHeight / 2) - (iPseudo.offsetHeight) - 40 + 'px';
   }
 
   startAnim(code) {

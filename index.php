@@ -17,6 +17,5 @@
     <script src="js/class_mur.js" charset="utf-8"></script>
     <script src="js/class_player1.js" charset="utf-8"></script>
     <script src="js/class_player2.js" charset="utf-8"></script>
-    <!-- <script src="js/deplacement.js" charset="utf-8"></script> -->
   </body>
 </html>
