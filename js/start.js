@@ -13,4 +13,7 @@ startBtn.innerText = "Lancer la partie !"
 terrain.appendChild(startBtn);
 startBtn.style.left = (terrain.offsetWidth / 2) - (startBtn.offsetWidth / 2) + 'px';
 startBtn.style.top = (terrain.offsetHeight / 2) - (startBtn.offsetHeight) + 'px';
-startBtn.onclick = function() { spawn(); };
+startBtn.onclick = function() {
+  spawn();
+  startBtn.remove();
+};

@@ -1,6 +1,6 @@
 class c_ennemie {
   constructor(spawnX, spawnY) {
-    this.life = 3;
+    this.life = 1;
 
     let divMob = document.createElement("div");
     divMob.style.width = "40px";
@@ -48,6 +48,54 @@ class c_ennemie {
   gameOver() {
     clearInterval(this.loop);
     this.div.remove();
+    ennemie = ennemie.filter(e => e.life > 0);
+
+    if (ennemie.length == 0) {
+      audio.pause();
+      start = false;
+      win.play();
+
+      let loser = document.createElement("p");
+      loser.style.position = "absolute";
+      loser.innerText = "Bravo !"
+      loser.style.padding = "10px 15px 10px 15px";
+      loser.style.borderRadius= "5px";
+      loser.style.backgroundColor = 'white';
+      loser.style.zIndex = 999;
+      loser.style.fontWeight = "bold";
+      loser.style.fontSize = "21px";
+      terrain.appendChild(loser);
+      loser.style.left = (terrain.offsetWidth / 2) - (loser.offsetWidth / 2) + 'px';
+      loser.style.top = (terrain.offsetHeight / 2) - (loser.offsetHeight) + 'px';
+
+      let restartBtn = document.createElement("button");
+      restartBtn.style.position = "absolute";
+      restartBtn.innerText = "Relancer la partie !"
+      restartBtn.style.zIndex = 999;
+      terrain.appendChild(restartBtn);
+      restartBtn.style.left = (terrain.offsetWidth / 2) - (restartBtn.offsetWidth / 2) + 'px';
+      restartBtn.style.top = (terrain.offsetHeight / 2) - (restartBtn.offsetHeight) + 60 + 'px';
+      restartBtn.onclick = function() {
+        loser.remove();
+        murs.forEach(function(element) {
+          element.div.remove();
+        });
+        ennemie.forEach(function(element) {
+          element.div.remove();
+        });
+        bombe.forEach(function(element) {
+          element.div.remove();
+        });
+        joueur.div.remove();
+        murs = [];
+        bombe = [];
+        ennemie = [];
+        nbrMursActuel = 0;
+        nbrEnnemiesActuel = 0;
+        spawn();
+        restartBtn.remove();
+      };
+    }
   }
 
 

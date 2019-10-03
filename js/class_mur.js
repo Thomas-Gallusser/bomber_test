@@ -15,7 +15,7 @@ class c_mur {
     newMur.style.position = "absolute";
     newMur.style.backgroundSize = "cover";
     newMur.style.zIndex = 900;
-    if (this.breakable) newMur.style.backgroundPosition = '0px 0px';
+    if (this.breakable > 0) newMur.style.backgroundPosition = '0px 0px';
       else newMur.style.backgroundPosition = '-40px 0px';
     newMur.style.backgroundImage = "url('img/mur.png')";
     terrain.appendChild(newMur);

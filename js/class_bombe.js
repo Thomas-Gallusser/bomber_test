@@ -32,7 +32,7 @@ class c_bomb {
         newBomb.style.backgroundPosition = "0px -80px";
         setTimeout(function() {
           that.poseur.canBomb = true;
-          audio.cloneNode(true).play();
+          boom.cloneNode(true).play();
           that.breakAll();
 
           newBomb.style.width = "120px";
@@ -56,7 +56,7 @@ class c_bomb {
     allWall.push(this.verifCollisionAll(joueur.div, this.x-move_size, this.y, murs));
     allWall.push(this.verifCollisionAll(joueur.div, this.x, this.y+move_size, murs));
     allWall.push(this.verifCollisionAll(joueur.div, this.x, this.y-move_size, murs));
-    allWall = allWall.filter(e => e.length > 0 && e[0].breakable == 1);
+    allWall = allWall.filter(e => e.length > 0 && e[0].breakable > 0);
     allWall.forEach(function(element) {
       element[0].div.remove();
     });
