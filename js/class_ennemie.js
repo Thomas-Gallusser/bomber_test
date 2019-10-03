@@ -172,13 +172,13 @@ class c_ennemie {
   }
 
   verifSee(){
-    if (!this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,murs) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,joueur1)) this.dir.push("ArrowLeft");
+    if (!this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,murs) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,bombe) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,joueur1)) this.dir.push("ArrowLeft");
 
-    if (!this.verifCollision(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,murs) && !this.verifCollision(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,joueur1)) this.dir.push("ArrowRight");
+    if (!this.verifCollision(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,murs) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,bombe)  && !this.verifCollision(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,joueur1)) this.dir.push("ArrowRight");
 
-    if (!this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,murs) && !this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,joueur1)) this.dir.push("ArrowUp");
+    if (!this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,murs) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,bombe)  && !this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,joueur1)) this.dir.push("ArrowUp");
 
-    if (!this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,murs) && !this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,joueur1)) this.dir.push("ArrowDown");
+    if (!this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,murs) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,bombe)  && !this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,joueur1)) this.dir.push("ArrowDown");
   }
 
   startAnim(code) {
