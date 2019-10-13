@@ -24,13 +24,11 @@ class c_ennemie {
       let that = this;
       setTimeout(function() {
         that.dir = [];
-        that.verifSee();
+        that.verifDeplacement();
 
-        if (that.dir.length > 0) {
-          that.move(that.dir[getRnd(that.dir.length)]);
-        }
+        if (that.dir.length > 0) that.move(that.dir[getRnd(that.dir.length)]);
         if (that.life > 0) that.boucle();
-      },500);
+      },2000);
   }
 
   getDamage() {
@@ -45,12 +43,17 @@ class c_ennemie {
     ennemie = ennemie.filter(e => e.life > 0);
 
     if (ennemie.length == 0) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", './score.php', true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.send('score='+score+'&pseudo='+pseudo);
+
       audio.pause();
       start = false;
       win.play();
 
       let tableScore = document.createElement("table");
-      var xhr = new XMLHttpRequest();
+      xhr = new XMLHttpRequest();
       xhr.open("POST", './score.php', true);
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       xhr.onload = function() {
@@ -73,7 +76,7 @@ class c_ennemie {
             }
           }
       };
-      xhr.send('get');
+      xhr.send('get=0');
 
       let winer = document.createElement("p");
       winer.style.position = "absolute";
@@ -171,16 +174,6 @@ class c_ennemie {
     }
   }
 
-  verifSee(){
-    if (!this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,murs) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,bombe) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,joueur1)) this.dir.push("ArrowLeft");
-
-    if (!this.verifCollision(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,murs) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,bombe)  && !this.verifCollision(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft+move_size,this.div.offsetTop,joueur1)) this.dir.push("ArrowRight");
-
-    if (!this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,murs) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,bombe)  && !this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft,this.div.offsetTop-move_size,joueur1)) this.dir.push("ArrowUp");
-
-    if (!this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,murs) && !this.verifCollision(this.div,this.div.offsetLeft-move_size,this.div.offsetTop,bombe)  && !this.verifCollision(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,ennemie) && !this.verifCollisionP(this.div,this.div.offsetLeft,this.div.offsetTop+move_size,joueur1)) this.dir.push("ArrowDown");
-  }
-
   startAnim(code) {
       var getActualPos = this.div.style.backgroundPosition.split('px')[0];
 
@@ -224,16 +217,23 @@ class c_ennemie {
       }
   }
 
-  verifCollision(objet,verifX, verifY, tableau) {
-    if ((tableau.filter(e => verifX < e.div.offsetLeft + e.div.offsetWidth && verifX + objet.offsetWidth > e.div.offsetLeft && verifY < e.div.offsetTop + e.div.offsetHeight && objet.offsetHeight + verifY > e.div.offsetTop)).length > 0) {
-         return true;
-    }
-    return false;
-  }
-  verifCollisionP(objet,verifX, verifY, pl) {
-    if (verifX < pl.offsetLeft + pl.offsetWidth && verifX + objet.offsetWidth > pl.offsetLeft && verifY < pl.offsetTop + pl.offsetHeight && objet.offsetHeight + verifY > pl.offsetTop) {
-         return true;
-    }
-    return false;
+  verifDeplacement() {
+    this.dir = [];
+
+    if (!(joueur1.div.offsetLeft + move_size == this.div.offsetLeft && joueur1.div.offsetTop == this.div.offsetTop) && ennemie.filter(e => (e.div.offsetLeft + move_size == this.div.offsetLeft && e.div.offsetTop == this.div.offsetTop).length == 0)  && bombe.filter(e => (e.div.offsetLeft + move_size == this.div.offsetLeft && e.div.offsetTop == this.div.offsetTop).length == 0) && (murs.filter(e => (e.div.offsetLeft + move_size == this.div.offsetLeft && e.div.offsetTop == this.div.offsetTop)).length == 0)) if (joueur2 != undefined) {
+          if (!(joueur2.div.offsetLeft + move_size == this.div.offsetLeft && joueur2.div.offsetTop == this.div.offsetTop)) this.dir.push("ArrowRight");
+    } else this.dir.push("ArrowLeft");
+
+    if (!(joueur1.div.offsetLeft - move_size == this.div.offsetLeft && joueur1.div.offsetTop == this.div.offsetTop) && ennemie.filter(e => (e.div.offsetLeft - move_size == this.div.offsetLeft && e.div.offsetTop == this.div.offsetTop).length == 0) && bombe.filter(e => (e.div.offsetLeft - move_size == this.div.offsetLeft && e.div.offsetTop == this.div.offsetTop).length == 0) && (murs.filter(e => (e.div.offsetLeft - move_size == this.div.offsetLeft && e.div.offsetTop == this.div.offsetTop)).length == 0)) if (joueur2 != undefined) {
+      if (!(joueur2.div.offsetLeft - move_size == this.div.offsetLeft && joueur2.div.offsetTop == this.div.offsetTop)) this.dir.push("ArrowLeft");
+    } else this.dir.push("ArrowRight");
+
+    if (!(joueur1.div.offsetLeft == this.div.offsetLeft && joueur1.div.offsetTop + move_size == this.div.offsetTop) && ennemie.filter(e => (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop + move_size == this.div.offsetTop).length == 0) && bombe.filter(e => (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop + move_size == this.div.offsetTop).length == 0) && (murs.filter(e => (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop + move_size == this.div.offsetTop)).length == 0)) if (joueur2 != undefined) {
+      if (!(joueur2.div.offsetLeft == this.div.offsetLeft && joueur2.div.offsetTop + move_size == this.div.offsetTop)) this.dir.push("ArrowBottom");
+    } else this.dir.push("ArrowUp");
+
+    if (!(joueur1.div.offsetLeft == this.div.offsetLeft && joueur1.div.offsetTop - move_size == this.div.offsetTop) && ennemie.filter(e => (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop - move_size == this.div.offsetTop).length == 0) && bombe.filter(e => (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop - move_size == this.div.offsetTop).length == 0) && (murs.filter(e => (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop - move_size == this.div.offsetTop)).length == 0)) if (joueur2 != undefined) {
+      if (!(joueur2.div.offsetLeft == this.div.offsetLeft && joueur2.div.offsetTop - move_size == this.div.offsetTop)) this.dir.push("ArrowUp");
+    } else this.dir.push("ArrowBottom");
   }
 }

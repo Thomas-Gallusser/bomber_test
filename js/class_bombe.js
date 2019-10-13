@@ -33,7 +33,7 @@ class c_bomb {
           let bm = boom.cloneNode(true);
           bm.volume = 0.4;
           bm.play();
-          that.breakAll();
+          if (start) that.breakAll();
 
           newBomb.style.width = "120px";
           newBomb.style.height = "120px";
@@ -67,15 +67,13 @@ class c_bomb {
   }
 
   verifCollisionAll(objet,verifX, verifY, tableau) {
-    let mursRetour = tableau.filter(e => verifX < e.div.offsetLeft + e.div.offsetWidth && verifX + objet.offsetWidth > e.div.offsetLeft && verifY < e.div.offsetTop + e.div.offsetHeight && objet.offsetHeight + verifY > e.div.offsetTop);
-
-    return mursRetour;
+    return tableau.filter(e => verifX < e.div.offsetLeft + e.div.offsetWidth && verifX + objet.offsetWidth > e.div.offsetLeft && verifY < e.div.offsetTop + e.div.offsetHeight && objet.offsetHeight + verifY > e.div.offsetTop);
   }
 
   verifPlayer() {
     if ((joueur1.div.offsetLeft + move_size == this.div.offsetLeft && joueur1.div.offsetTop == this.div.offsetTop) ||
         (joueur1.div.offsetLeft - move_size == this.div.offsetLeft && joueur1.div.offsetTop == this.div.offsetTop) ||
-        (joueur1.div.offsetLeft == this.div.offsetLeft && joueur1.div.offsetTo + move_size == this.div.offsetTop) ||
+        (joueur1.div.offsetLeft == this.div.offsetLeft && joueur1.div.offsetTop + move_size == this.div.offsetTop) ||
         (joueur1.div.offsetLeft == this.div.offsetLeft && joueur1.div.offsetTop - move_size == this.div.offsetTop) ||
         (joueur1.div.offsetLeft == this.div.offsetLeft && joueur1.div.offsetTop == this.div.offsetTop))
           return true;
@@ -86,7 +84,7 @@ class c_bomb {
   verifPlayer2() {
       if ((joueur2.div.offsetLeft + move_size == this.div.offsetLeft && joueur2.div.offsetTop == this.div.offsetTop) ||
           (joueur2.div.offsetLeft - move_size == this.div.offsetLeft && joueur2.div.offsetTop == this.div.offsetTop) ||
-          (joueur2.div.offsetLeft == this.div.offsetLeft && joueur2.div.offsetTo + move_size == this.div.offsetTop) ||
+          (joueur2.div.offsetLeft == this.div.offsetLeft && joueur2.div.offsetTop + move_size == this.div.offsetTop) ||
           (joueur2.div.offsetLeft == this.div.offsetLeft && joueur2.div.offsetTop - move_size == this.div.offsetTop) ||
           (joueur2.div.offsetLeft == this.div.offsetLeft && joueur2.div.offsetTop == this.div.offsetTop))
             return true;
@@ -96,7 +94,7 @@ class c_bomb {
 
   verifEnemy() {
     return ennemie.filter(e => (e.div.offsetLeft + move_size == this.div.offsetLeft && e.div.offsetTop == this.div.offsetTop) ||
-        (e.div.offsetLeft - move_size == this.div.offsetLeft && this.div.offsetTop == this.div.offsetTop) ||
+        (e.div.offsetLeft - move_size == this.div.offsetLeft && e.div.offsetTop == this.div.offsetTop) ||
         (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop + move_size == this.div.offsetTop) ||
         (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop - move_size == this.div.offsetTop) ||
         (e.div.offsetLeft == this.div.offsetLeft && e.div.offsetTop == this.div.offsetTop));

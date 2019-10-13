@@ -3,7 +3,7 @@ let move_size = 40; // Cases par déplacements
 let nbrMurs = 90; // Le nombre de murs à spawn
 let nbrMursActuel = 0;
 
-let nbrEnnemies = 1; // Le nombre d'ennemies à spawn
+let nbrEnnemies = 5; // Le nombre d'ennemies à spawn
 let nbrEnnemiesActuel = 0;
 
 let murs = [];
@@ -85,3 +85,38 @@ function verifCollision(objet,verifX, verifY, tableau) {
 function getRnd(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
+
+var hautJ1 = "ArrowUp";
+var basJ1 = "ArrowDown";
+var droiteJ1 = "ArrowRight";
+var gaucheJ1 = "ArrowLeft";
+var bombeJ1 = "Space";
+var lastKeyJ1 = "";
+
+var hautJ2 = "Numpad8";
+var basJ2 = "Numpad2";
+var droiteJ2 = "Numpad6";
+var gaucheJ2 = "Numpad4";
+var bombeJ2 = "Numpad0";
+var lastKeyJ2 = "";
+
+document.addEventListener("keydown", event => {
+  if (start && (event.code == hautJ1 || event.code == basJ1 || event.code == droiteJ1 || event.code == gaucheJ1)) lastKeyJ1 = event.code;
+  if (start && (event.code == hautJ2 || event.code == basJ2 || event.code == droiteJ2 || event.code == gaucheJ2)) lastKeyJ2 = event.code;
+}, false);
+
+document.addEventListener("keyup", event => {
+  if (event.code == lastKeyJ1) {
+    joueur1.div.style.backgroundPosition = '0px 0px';
+    lastKeyJ1 = "";
+  }
+  if (event.code == lastKeyJ2) {
+    joueur2.div.style.backgroundPosition = '0px 0px';
+    lastKeyJ2 = '';
+  }
+}, false);
+
+document.addEventListener("keypress", event => {
+  if (event.code == bombeJ1 && joueur1.canBomb && joueur1.life > 0) new c_bomb(joueur1);
+  if (event.code == bombeJ2 && joueur2.canBomb && joueur2.life > 0) new c_bomb(joueur2);
+}, false);

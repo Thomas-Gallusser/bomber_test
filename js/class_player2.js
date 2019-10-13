@@ -3,11 +3,6 @@ class c_player2 {
     this.life = 1;
     this.canBomb = true;
     this.nextMove = true;
-    this.haut = "Numpad8";
-    this.bas = "Numpad2";
-    this.droite = "Numpad6";
-    this.gauche = "Numpad4";
-    this.bombe = "Numpad0";
 
     let divJoueur = document.createElement("div");
     divJoueur.style.width = "40px";
@@ -24,16 +19,15 @@ class c_player2 {
     this.div = divJoueur;
 
     let that = this;
-    let lastKey = "";
-    setInterval(function(){
+    this.loop = setInterval(function(){
       var newX = that.div.offsetLeft;
       var newY = that.div.offsetTop;
-      that.startAnim(lastKey);
+      that.startAnim(lastKeyJ2);
 
-      if (lastKey == that.haut) newY -= move_size;
-      if (lastKey == that.bas) newY += move_size;
-      if (lastKey == that.droite) newX += move_size;
-      if (lastKey == that.gauche) newX -= move_size;
+      if (lastKeyJ2 == hautJ2) newY -= move_size;
+      if (lastKeyJ2 == basJ2) newY += move_size;
+      if (lastKeyJ2 == droiteJ2) newX += move_size;
+      if (lastKeyJ2 == gaucheJ2) newX -= move_size;
 
 
 
@@ -42,18 +36,6 @@ class c_player2 {
         that.div.style.top = newY + 'px';
       }
     }, 200);
-
-    document.addEventListener("keydown", event => { if (start && (event.code == that.haut || event.code == that.bas || event.code == that.droite || event.code == that.gauche)) lastKey = event.code; }, false);
-
-    document.addEventListener("keyup", event => {
-      if (event.code == lastKey) {
-        this.div.style.backgroundPosition = '0px 0px';
-        lastKey = '';
-      }
-    }, false);
-    document.addEventListener("keypress", event => {
-      if (event.code == that.bombe && this.canBomb && that.life > 0) new c_bomb(this);
-    }, false);
   }
 
   getDamage() {
@@ -76,7 +58,6 @@ class c_player2 {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onload = function() {
         if (xhr.status === 200) {
-
           if (xhr.responseText.includes('<tr>')) {
             tableScore.style.position = "absolute";
             tableScore.innerHTML = xhr.responseText;
@@ -98,7 +79,7 @@ class c_player2 {
 
     let loser = document.createElement("p");
     loser.style.position = "absolute";
-    loser.innerText = "Joueur 1 à gagner !";
+    loser.innerText = "Joueur 1 à gagné !";
     loser.style.padding = "10px 15px 10px 15px";
     loser.style.borderRadius= "5px";
     loser.style.backgroundColor = 'white';
@@ -209,7 +190,7 @@ class c_player2 {
   startAnim(code) {
       var getActualPos = this.div.style.backgroundPosition.split('px')[0];
 
-      if (code == this.haut) {
+      if (code == hautJ2) {
         if (getActualPos != '-280' && getActualPos != '-320') {
           this.div.style.backgroundPosition = '-280px 0px';
         } else if (getActualPos == '-280') {
@@ -218,7 +199,7 @@ class c_player2 {
           this.div.style.backgroundPosition = '-280px 0px';
         }
       }
-      if (code == this.bas) {
+      if (code == basJ2) {
         if (getActualPos != '-40' && getActualPos != '-80') {
           this.div.style.backgroundPosition = '-40px 0px';
         } else if (getActualPos == '-40') {
@@ -228,7 +209,7 @@ class c_player2 {
         }
 
       }
-      if (code == this.droite) {
+      if (code == droiteJ2) {
         if (getActualPos != '-120' && getActualPos != '-160') {
           this.div.style.backgroundPosition = '-120px 0px';
         } else if (getActualPos == '-120') {
@@ -238,7 +219,7 @@ class c_player2 {
         }
 
       }
-      if (code == this.gauche) {
+      if (code == gaucheJ2) {
         if (getActualPos != '-200' && getActualPos != '-240') {
           this.div.style.backgroundPosition = '-200px 0px';
         } else if (getActualPos == '-200') {
